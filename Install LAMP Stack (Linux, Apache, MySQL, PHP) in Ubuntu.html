@@ -1,0 +1,163 @@
+<!-- #######  YAY, I AM THE SOURCE EDITOR! #########-->
+<h1 class="western"><span style="font-family: Roboto, serif;"><span style="font-size: large;">Install LAMP Stack (Linux, Apache, MySQL, PHP) in Ubuntu</span></span></h1>
+<h1 class="western"><a name="_6gsi60njkqgp"></a> <a href="https://www.youtube.com/watch?v=vazRx1Ei8VA"><span style="color: #1155cc;"><span style="font-size: small;"><u><strong>https://www.youtube.com/watch?v=vazRx1Ei8VA</strong></u></span></span></a></h1>
+<p>&nbsp;</p>
+<p>emil@DBCPC37 ~ $ Sudo apt-get update</p>
+<p>emil@DBCPC37 ~ $ sudo apt-get install apache2</p>
+<p>&nbsp;</p>
+<p>Now open browser and check localhost is working also check with ip</p>
+<p>&nbsp;</p>
+<p>Install php</p>
+<p>&nbsp;</p>
+<p>Sudo apt-get install php</p>
+<p>sudo apt-get install apache2 php-mysql libapache2-mod-php mysql-server</p>
+<p>&nbsp;</p>
+<p>Give mysql password dbc@123</p>
+<p>&nbsp;</p>
+<p>Now create sample test.php file in /var/www/http/</p>
+<p>&nbsp;</p>
+<p>emil@DBCPC37 ~ $ sudo nano /var/www/html/test.php</p>
+<p>&nbsp;</p>
+<p>Add this line</p>
+<p>&nbsp;</p>
+<p>&lt;?php echo 'Hello World'; ?&gt;</p>
+<p>&nbsp;</p>
+<p>Save and close</p>
+<p>&nbsp;</p>
+<p>Now try to access in browser <a href="http://localhost/test.php"><span style="color: #1155cc;"><u>http://localhost/test.php</u></span></a></p>
+<p>The page should come.</p>
+<p>&nbsp;</p>
+<p>Now create a database</p>
+<p>&nbsp;</p>
+<p>emil@DBCPC37 ~ $ mysql -u root -p</p>
+<p>Enter password:</p>
+<p>Welcome to the MySQL monitor. Commands end with ; or \g.</p>
+<p>Your MySQL connection id is 4</p>
+<p>Server version: 5.7.26-0ubuntu0.16.04.1 (Ubuntu)</p>
+<p>&nbsp;</p>
+<p>Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</p>
+<p>&nbsp;</p>
+<p>Oracle is a registered trademark of Oracle Corporation and/or its</p>
+<p>affiliates. Other names may be trademarks of their respective</p>
+<p>owners.</p>
+<p>&nbsp;</p>
+<p>Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.</p>
+<p>&nbsp;</p>
+<p>mysql&gt; create database testdb</p>
+<p>-&gt; ;</p>
+<p>Query OK, 1 row affected (0.00 sec)</p>
+<p>&nbsp;</p>
+<p>mysql&gt; show databases</p>
+<p>-&gt; ;</p>
+<p>+--------------------+</p>
+<p>| Database |</p>
+<p>+--------------------+</p>
+<p>| information_schema |</p>
+<p>| mysql |</p>
+<p>| performance_schema |</p>
+<p>| sys |</p>
+<p>| testdb |</p>
+<p>+--------------------+</p>
+<p>5 rows in set (0.02 sec)</p>
+<p>&nbsp;</p>
+<p>mysql&gt;</p>
+<p>&nbsp;</p>
+<p>Exit</p>
+<p>&nbsp;</p>
+<p>Now install phpmyadmin</p>
+<p>&nbsp;</p>
+<p>emil@DBCPC37 ~ $ sudo apt-get install phpmyadmin</p>
+<p>&nbsp;</p>
+<p>It will ask for what kind of web server, I did not select any thing.</p>
+<p>&nbsp;</p>
+<p>I gave password for phpmyadmin sql@dbc</p>
+<p>&nbsp;</p>
+<p>Now try to access localhost/phpmyadmin in browser</p>
+<p>&nbsp;</p>
+<p>I got and error</p>
+<p>&nbsp;</p>
+<p>So I edited.</p>
+<p>&nbsp;</p>
+<p>emil@DBCPC37 ~ $ sudo nano /etc/php/7.3/apache2/php.ini</p>
+<p>&nbsp;</p>
+<p>And uncomment only one line below</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>;extension=interbase</p>
+<p>;extension=ldap</p>
+<p>;extension=mbstring</p>
+<p>;extension=exif ; Must be after mbstring as it depends on it</p>
+<p><strong>extension=mysqli</strong></p>
+<p>;extension=oci8_12c ; Use with Oracle Database 12c Instant Client</p>
+<p>;extension=odbc</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Save and close</p>
+<p>&nbsp;</p>
+<p>Restart apache and try again</p>
+<p>&nbsp;</p>
+<p>Still not working</p>
+<p>&nbsp;</p>
+<p>Then I added this line to the following file</p>
+<p>&nbsp;</p>
+<p>emil@DBCPC37 ~ $ sudo nano /etc/apache2/apache2.conf</p>
+<p>&nbsp;</p>
+<p># Include the virtual host configurations:</p>
+<p>IncludeOptional sites-enabled/*.conf</p>
+<p>&nbsp;</p>
+<p># vim: syntax=apache ts=4 sw=4 sts=4 sr noet</p>
+<p>&nbsp;</p>
+<p><strong>Include /etc/phpmyadmin/apache.conf</strong></p>
+<p>&nbsp;</p>
+<p>Restarted apache , now it is woring</p>
+<p>&nbsp;</p>
+<p><a href="http://localhost/phpmyadmin/"><span style="color: #1155cc;"><u>http://localhost/phpmyadmin/</u></span></a></p>
+<p>User : root</p>
+<p>Password : dbc@123</p>
+<p>&nbsp;</p>
+<p>I was getting an error while insert database and other, so I edited a file</p>
+<p>&nbsp;</p>
+<p>emil@DBCPC37 ~/Desktop $ sudo nano -c /usr/share/phpmyadmin/libraries/sql.lib.php</p>
+<p>&nbsp;</p>
+<p>I edited the line no. 601</p>
+<p>&nbsp;</p>
+<p>From</p>
+<p>&nbsp;</p>
+<p>&amp;&amp; ((empty($analyzed_sql_results['select_expr']))</p>
+<p>|| (count($analyzed_sql_results['select_expr'] == 1)</p>
+<p>&amp;&amp; ($analyzed_sql_results['select_expr'][0] == '*')))</p>
+<p>&amp;&amp; count($analyzed_sql_results['select_tables']) == 1;</p>
+<p>&nbsp;</p>
+<p>To</p>
+<p>&nbsp;</p>
+<p>&amp;&amp; ((empty($analyzed_sql_results['select_expr']))</p>
+<p>|| (count($analyzed_sql_results['select_expr']) == 1</p>
+<p>&amp;&amp; ($analyzed_sql_results['select_expr'][0] == '*')))</p>
+<p>&amp;&amp; count($analyzed_sql_results['select_tables']) == 1;</p>
+<p>&nbsp;</p>
+<p>Now it is working.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>I was not able to copy any directroy to /var/ww/html</p>
+<p>&nbsp;</p>
+<p><strong>emil@DBCPC37 ~/Desktop $ cp vrps.in/ /var/www/html/</strong></p>
+<p><strong>cp: omitting directory 'vrps.in/'</strong></p>
+<p>&nbsp;</p>
+<p>Then I copied using below command</p>
+<p>&nbsp;</p>
+<p><strong>emil@DBCPC37 ~/Desktop $ cp -r vrps.in/ /var/www/html/</strong></p>
+<p><strong>emil@DBCPC37 ~/Desktop $ </strong></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
